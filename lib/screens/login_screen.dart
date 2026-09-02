@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/services.dart';
 import '../services/auth_service.dart';
-import '../constants/api_constants.dart';
 import '../main.dart';
 import 'register_screen.dart';
 
@@ -59,57 +58,6 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
     }
   }
 
-  void _showServerConfigDialog() {
-    final ipCtrl = TextEditingController(text: ApiConstants.baseUrl);
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Server Settings'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Specify your PC\'s Wi-Fi IP address or Server URL:',
-              style: TextStyle(fontSize: 13, color: AppColors.textMuted),
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: ipCtrl,
-              decoration: const InputDecoration(
-                labelText: 'Server URL / IP',
-                prefixIcon: Icon(Icons.dns),
-                hintText: 'http://10.13.238.148:3000',
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () async {
-              await ApiConstants.setCustomBaseUrl('');
-              if (mounted) {
-                Navigator.pop(ctx);
-                setState(() {});
-              }
-            },
-            child: const Text('Reset Default'),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              await ApiConstants.setCustomBaseUrl(ipCtrl.text);
-              if (mounted) {
-                Navigator.pop(ctx);
-                setState(() {});
-              }
-            },
-            child: const Text('Save'),
-          ),
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -123,36 +71,27 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const SizedBox(width: 48),
-                    Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(24),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            blurRadius: 16,
-                            spreadRadius: 2,
-                          ),
-                        ],
-                      ),
-                      child: Image.asset(
-                        'assets/images/logo.png',
-                        width: 90,
-                        height: 90,
-                        fit: BoxFit.contain,
-                      ),
+                Center(
+                  child: Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(24),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 16,
+                          spreadRadius: 2,
+                        ),
+                      ],
                     ),
-                    IconButton(
-                      icon: const Icon(Icons.dns_outlined, color: AppColors.primary),
-                      tooltip: 'Server IP Settings',
-                      onPressed: _showServerConfigDialog,
+                    child: Image.asset(
+                      'assets/images/logo.png',
+                      width: 90,
+                      height: 90,
+                      fit: BoxFit.contain,
                     ),
-                  ],
+                  ),
                 ),
 
                 const SizedBox(height: 24),
@@ -198,33 +137,11 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(color: AppColors.error.withOpacity(0.4)),
                       ),
-                      child: Column(
+                      child: Row(
                         children: [
-                          Row(
-                            children: [
-                              const Icon(Icons.error_outline, color: AppColors.error, size: 18),
-                              const SizedBox(width: 10),
-                              Expanded(child: Text(_error!, style: const TextStyle(color: AppColors.error, fontSize: 13))),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
-                          InkWell(
-                            onTap: _showServerConfigDialog,
-                            child: const Padding(
-                              padding: EdgeInsets.symmetric(vertical: 4),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Icon(Icons.settings, size: 14, color: AppColors.primary),
-                                  SizedBox(width: 4),
-                                  Text(
-                                    'Change Server IP',
-                                    style: TextStyle(color: AppColors.primary, fontSize: 12, fontWeight: FontWeight.bold, decoration: TextDecoration.underline),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
+                          const Icon(Icons.error_outline, color: AppColors.error, size: 18),
+                          const SizedBox(width: 10),
+                          Expanded(child: Text(_error!, style: const TextStyle(color: AppColors.error, fontSize: 13))),
                         ],
                       ),
                     ),
