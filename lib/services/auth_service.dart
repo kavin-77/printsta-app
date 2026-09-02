@@ -49,7 +49,8 @@ class AuthService extends ChangeNotifier {
       }
       return {'success': false, 'message': data['message'] ?? 'Login failed'};
     } catch (e) {
-      return {'success': false, 'message': 'Cannot connect to server. Make sure backend is running.'};
+      debugPrint('Login exception: $e');
+      return {'success': false, 'message': 'Cannot connect to server: $e'};
     }
   }
 
