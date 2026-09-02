@@ -2,12 +2,18 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiConstants {
   static String _customBaseUrl = '';
-  static const String _defaultBase = 'http://172.17.4.67:3000';
+  static const String _defaultBase = 'https://printsta-server-production.up.railway.app';
 
   static Future<void> loadBaseUrl() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      _customBaseUrl = prefs.getString('custom_server_url') ?? '';
+      final saved = prefs.getString('custom_server_url') ?? '';
+      if (saved.contains('172.17.') || saved.contains('192.168.') || saved.contains('10.0.2.2') || saved.contains('localhost')) {
+        await prefs.remove('custom_server_url');
+        _customBaseUrl = '';
+      } else {
+        _customBaseUrl = saved;
+      }
     } catch (_) {}
   }
 
